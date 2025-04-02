@@ -1,11 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
     const taskInput = document.getElementById("taskInput");
-    const categorySelect = document.getElementById("category");
+    const categoryInput = document.getElementById("categoryInput");
     const taskDate = document.getElementById("taskDate");
     const addTaskButton = document.getElementById("addTask");
     const taskList = document.getElementById("taskList");
     const filterButtons = document.querySelectorAll(".filter-btn");
     let currentFilter = "all";
+    const categoryColors = JSON.parse(localStorage.getItem("categoryColors")) || {};
 
     loadTasks();
 
@@ -14,15 +15,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function addTask() {
         const taskText = taskInput.value.trim();
-        const category = categorySelect.value;
+        const category = categoryInput.value.trim().toLowerCase();
         const taskTime = taskDate.value;
-        if (!taskText || !taskTime) return;
+        if (!taskText || !category || !taskTime) return;
+
+        // Генерация цвета для новой категории, если его нет
+        if (!categoryColors[category]) {
+            categoryColors[category] = getRandomColor();
+            localStorage.setItem("categoryColors", JSON.stringify(categoryColors));
+        }
 
         const li = document.createElement("li");
-        li.classList.add(category);
         li.innerHTML = `
             <input type="checkbox" class="task-checkbox">
             <div class="task-content">
+                <span class="category" style="background-color: ${categoryColors[category]}">${category}</span>
                 <span>${taskText}</span>
                 <div class="task-time">${new Date(taskTime).toLocaleString().slice(0, -3)}</div>
             </div>
@@ -32,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
         saveTasks();
         filterTasks();
         taskInput.value = "";
+        categoryInput.value = "";
         taskDate.value = "";
     }
 
@@ -68,9 +76,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function saveTasks() {
         const tasks = Array.from(taskList.children).map(li => ({
-            text: li.querySelector("span").textContent,
+            text: li.querySelector("span:not(.category)").textContent,
             time: li.querySelector(".task-time").textContent,
-            category: li.classList[0],
+            category: li.querySelector(".category").textContent,
             done: li.classList.contains("done")
         }));
         localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -79,12 +87,15 @@ document.addEventListener("DOMContentLoaded", () => {
     function loadTasks() {
         const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
         tasks.forEach(task => {
+            if (!categoryColors[task.category]) {
+                categoryColors[task.category] = getRandomColor();
+            }
             const li = document.createElement("li");
-            li.classList.add(task.category);
             if (task.done) li.classList.add("done");
             li.innerHTML = `
                 <input type="checkbox" class="task-checkbox" ${task.done ? "checked" : ""}>
                 <div class="task-content">
+                    <span class="category" style="background-color: ${categoryColors[task.category]}">${task.category}</span>
                     <span>${task.text}</span>
                     <div class="task-time">${task.time}</div>
                 </div>
@@ -92,6 +103,16 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
             taskList.appendChild(li);
         });
+        localStorage.setItem("categoryColors", JSON.stringify(categoryColors));
         filterTasks();
+    }
+
+    function getRandomColor() {
+        const letters = "0123456789ABCDEF";
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
     }
 });
