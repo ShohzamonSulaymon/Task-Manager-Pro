@@ -55,8 +55,8 @@ input {
     color: white; 
     border: none; 
     border-radius: 50%; 
-    width: clamp(2.5vmin, 3vw, 3vmin); 
-    height: clamp(2.5vmin, 3vw, 3vmin); 
+    width: clamp(4vmin, 5vw, 4vmin); 
+    height: clamp(4vmin, 5vw, 4vmin); 
     font-size: clamp(1rem, 2.5vw, 1.5rem); 
     line-height: 1; 
     cursor: pointer; 
