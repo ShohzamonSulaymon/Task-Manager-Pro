@@ -55,8 +55,8 @@ input {
     color: white; 
     border: none; 
     border-radius: 50%; 
-    width: clamp(4vmin, 5vw, 4vmin); 
-    height: clamp(4vmin, 5vw, 4vmin); 
+    width: clamp(6vmin, 8vw, 6vmin); 
+    height: clamp(6vmin, 8vw, 6vmin); 
     font-size: clamp(1rem, 2.5vw, 1.5rem); 
     line-height: 1; 
     cursor: pointer; 
@@ -109,7 +109,12 @@ li {
     border-radius: 0.5vmin; 
     box-shadow: 0 0.2vmin 0.4vmin rgba(0, 0, 0, 0.05); 
 }
-
+.task-checkbox {
+  flex: 0.05 0 auto;
+  aspect-ratio: 1;
+  margin: 10px;
+  
+}
 .task-content { 
     flex: 1; 
     min-width: 0; 
@@ -137,26 +142,22 @@ li {
 
 .done .task-content span { 
     text-decoration: line-through; 
-    color: #888; 
-}
-
-.task-checkbox {
-    width: clamp(1.5vmin, 2vw, 2vmin); 
-    height: clamp(1.5vmin, 2vw, 2vmin); 
+    color: #000; 
 }
 
 .deleteTask { 
     background: #dc3545; 
     color: white; 
     border: none; 
-    border-radius: 50%; 
-    width: clamp(1.8vmin, 2.5vw, 2vmin); 
-    height: clamp(1.8vmin, 2.5vw, 2vmin); 
+    border-radius: 8px; 
+    aspect-ratio: 1;
+    margin: 10px;
     font-size: clamp(0.8rem, 2vw, 1rem); 
     line-height: 1; 
     cursor: pointer; 
     display: flex; 
     align-items: center; 
     justify-content: center; 
-    flex-shrink: 0; 
+    flex-shrink: 0;
+    flex-grow: 0.05;
 }
