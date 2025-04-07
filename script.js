@@ -6,7 +6,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const taskList = document.getElementById("taskList");
     const filterButtons = document.querySelectorAll(".filter-btn");
     let currentFilter = "all";
-    const categoryColors = JSON.parse(localStorage.getItem("categoryColors")) || {};
+
+    const categoryColors = {
+        work: "#f28b82",
+        personal: "#aecbfa",
+        study: "#ccff90",
+        default: "#e0e0e0"
+    };
 
     loadTasks();
 
@@ -19,17 +25,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const taskTime = taskDate.value;
         if (!taskText || !category || !taskTime) return;
 
-        // Генерация цвета для новой категории, если его нет
-        if (!categoryColors[category]) {
-            categoryColors[category] = getRandomColor();
-            localStorage.setItem("categoryColors", JSON.stringify(categoryColors));
-        }
+        const color = categoryColors[category] || categoryColors["default"];
 
         const li = document.createElement("li");
         li.innerHTML = `
             <input type="checkbox" class="task-checkbox">
             <div class="task-content">
-                <span class="category" style="background-color: ${categoryColors[category]}">${category}</span>
+                <span class="category" style="background-color: ${color}">${category}</span>
                 <span>${taskText}</span>
                 <div class="task-time">${new Date(taskTime).toLocaleString().slice(0, -3)}</div>
             </div>
@@ -87,15 +89,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function loadTasks() {
         const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
         tasks.forEach(task => {
-            if (!categoryColors[task.category]) {
-                categoryColors[task.category] = getRandomColor();
-            }
+            const color = categoryColors[task.category] || categoryColors["default"];
             const li = document.createElement("li");
             if (task.done) li.classList.add("done");
             li.innerHTML = `
                 <input type="checkbox" class="task-checkbox" ${task.done ? "checked" : ""}>
                 <div class="task-content">
-                    <span class="category" style="background-color: ${categoryColors[task.category]}">${task.category}</span>
+                    <span class="category" style="background-color: ${color}">${task.category}</span>
                     <span>${task.text}</span>
                     <div class="task-time">${task.time}</div>
                 </div>
@@ -103,16 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
             taskList.appendChild(li);
         });
-        localStorage.setItem("categoryColors", JSON.stringify(categoryColors));
         filterTasks();
-    }
-
-    function getRandomColor() {
-        const letters = "0123456789ABCDEF";
-        let color = "#";
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
     }
 });
