@@ -140,9 +140,7 @@ li {
     color: #888; 
 }
 
-/* Динамические категории будут стилизоваться через JS */
-.task-checkbox { 
-    margin-right: 1vmin; 
+.task-checkbox {
     width: clamp(1.5vmin, 2vw, 2vmin); 
     height: clamp(1.5vmin, 2vw, 2vmin); 
 }
